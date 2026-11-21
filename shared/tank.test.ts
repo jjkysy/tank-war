@@ -10,22 +10,19 @@ import {
   rankProgress,
   xpForRound,
   type TuningConfig,
-} from "../shared/tank";
+} from "./tank";
 
 describe("applyPatch — the supervisor's only gate", () => {
   it("applies a valid numeric change", () => {
-    const next = applyPatch(DEFAULT_TUNING, { enemyCount: 6 });
-    expect(next.enemyCount).toBe(6);
+    expect(applyPatch(DEFAULT_TUNING, { enemyCount: 6 }).enemyCount).toBe(6);
   });
 
   it("clamps above the maximum", () => {
-    const next = applyPatch(DEFAULT_TUNING, { enemyCount: 999 });
-    expect(next.enemyCount).toBe(TUNING_BOUNDS.enemyCount.max);
+    expect(applyPatch(DEFAULT_TUNING, { enemyCount: 999 }).enemyCount).toBe(TUNING_BOUNDS.enemyCount.max);
   });
 
   it("clamps below the minimum", () => {
-    const next = applyPatch(DEFAULT_TUNING, { enemyCount: -5 });
-    expect(next.enemyCount).toBe(TUNING_BOUNDS.enemyCount.min);
+    expect(applyPatch(DEFAULT_TUNING, { enemyCount: -5 }).enemyCount).toBe(TUNING_BOUNDS.enemyCount.min);
   });
 
   it("drops unknown keys", () => {
@@ -34,8 +31,9 @@ describe("applyPatch — the supervisor's only gate", () => {
   });
 
   it("ignores a non-finite number", () => {
-    const next = applyPatch(DEFAULT_TUNING, { enemySpeed: Number.NaN });
-    expect(next.enemySpeed).toBe(DEFAULT_TUNING.enemySpeed);
+    expect(applyPatch(DEFAULT_TUNING, { enemySpeed: Number.NaN }).enemySpeed).toBe(
+      DEFAULT_TUNING.enemySpeed,
+    );
   });
 
   it("accepts a valid view mode and rejects an invalid one", () => {
@@ -55,8 +53,7 @@ describe("applyPatch — the supervisor's only gate", () => {
 
 describe("clampTuning", () => {
   it("repairs an out-of-range stored config", () => {
-    const broken = { ...DEFAULT_TUNING, enemyCount: 500, enemyAccuracy: -3 };
-    const fixed = clampTuning(broken);
+    const fixed = clampTuning({ ...DEFAULT_TUNING, enemyCount: 500, enemyAccuracy: -3 });
     expect(fixed.enemyCount).toBe(TUNING_BOUNDS.enemyCount.max);
     expect(fixed.enemyAccuracy).toBe(TUNING_BOUNDS.enemyAccuracy.min);
   });
