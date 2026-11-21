@@ -1,0 +1,198 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Tailwind v4 is CSS-first: no tailwind.config / postcss / autoprefixer.
+   Dark mode is class-based (add `dark` on <html>/<body>); shadcn/ui token set.
+
+   TANK WAR — dark military command console.
+   Near-black base, olive/khaki surfaces, amber for the player, phosphor green
+   for the supervisor channel. Monospace for HUD numbers and labels. */
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.25rem;
+
+  --background: #0a0d0b;
+  --foreground: #d7ddd2;
+  --card: #10150f;
+  --card-foreground: #d7ddd2;
+  --popover: #10150f;
+  --popover-foreground: #d7ddd2;
+  --primary: #f5a524;
+  --primary-foreground: #14100a;
+  --secondary: #1a2118;
+  --secondary-foreground: #c3ccb8;
+  --muted: #161c14;
+  --muted-foreground: #7d8a74;
+  --accent: #1f2a1c;
+  --accent-foreground: #d7ddd2;
+  --destructive: #d94f3d;
+  --destructive-foreground: #fdf3f1;
+  --border: #26301f;
+  --input: #1c241a;
+  --ring: #f5a524;
+
+  /* domain colours */
+  --signal: #7ee787;      /* supervisor channel */
+  --signal-dim: #2f4a33;
+  --olive: #3d4a2e;
+  --khaki: #8a8f6a;
+  --danger: #d94f3d;
+  --grid: #1a2318;
+}
+
+.dark {
+  --background: #0a0d0b;
+  --foreground: #d7ddd2;
+  --card: #10150f;
+  --card-foreground: #d7ddd2;
+  --popover: #10150f;
+  --popover-foreground: #d7ddd2;
+  --primary: #f5a524;
+  --primary-foreground: #14100a;
+  --secondary: #1a2118;
+  --secondary-foreground: #c3ccb8;
+  --muted: #161c14;
+  --muted-foreground: #7d8a74;
+  --accent: #1f2a1c;
+  --accent-foreground: #d7ddd2;
+  --destructive: #d94f3d;
+  --destructive-foreground: #fdf3f1;
+  --border: #26301f;
+  --input: #1c241a;
+  --ring: #f5a524;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-signal: var(--signal);
+  --color-signal-dim: var(--signal-dim);
+  --color-olive: var(--olive);
+  --color-khaki: var(--khaki);
+  --color-danger: var(--danger);
+  --color-grid: var(--grid);
+
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
+
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(61, 74, 46, 0.22), transparent 70%),
+      linear-gradient(rgba(26, 35, 24, 0.35) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26, 35, 24, 0.35) 1px, transparent 1px);
+    background-size: 100% 100%, 48px 48px, 48px 48px;
+    background-attachment: fixed;
+  }
+  h1, h2, h3, h4 {
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer components {
+  /* Small uppercase monospace label — the console's voice. */
+  .hud-label {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    line-height: 1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+  .hud-value {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .panel {
+    background: color-mix(in srgb, var(--card) 88%, transparent);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .panel-inset {
+    background: #0c110a;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  /* Thin amber rule used under section headings. */
+  .rule-amber {
+    height: 1px;
+    background: linear-gradient(90deg, var(--primary), transparent);
+  }
+  .rule-signal {
+    height: 1px;
+    background: linear-gradient(90deg, var(--signal), transparent);
+  }
+  .scanlines::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 0px,
+      rgba(0, 0, 0, 0) 2px,
+      rgba(0, 0, 0, 0.16) 3px,
+      rgba(0, 0, 0, 0) 4px
+    );
+    opacity: 0.5;
+  }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    padding: 0.3rem 0.55rem;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--secondary-foreground);
+    background: var(--secondary);
+    transition: border-color 120ms, color 120ms, background 120ms;
+  }
+  .chip:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+  .chip:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+/* Scrollbar in the console palette. */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #0c110a; }
+::-webkit-scrollbar-thumb { background: #2a3524; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #3d4a2e; }
