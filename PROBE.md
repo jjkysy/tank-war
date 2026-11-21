@@ -1,3 +1,3 @@
 # Tank War
 
-Supervised tank battle game.
+Supervised tank battle game. See README.md.
